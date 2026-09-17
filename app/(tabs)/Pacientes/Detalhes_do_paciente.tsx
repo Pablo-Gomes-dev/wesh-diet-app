@@ -2,13 +2,13 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import {
-    Alert,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  Alert,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
 // TUDO DENTRO DESSA IDENTAÇÃO É O QUE VAI APARECER NA TELA DE DETALHES DO PACIENTE, ONDE O USUÁRIO PODE VER E EDITAR OS DADOS DO PACIENTE.
 export default function Detalhes_do_paciente() {
@@ -20,10 +20,43 @@ export default function Detalhes_do_paciente() {
   const [restricoes, setRestricoes] = useState("");
   const [observacoes, setObservacoes] = useState("");
 
+  // PARAMETRO UTILIZADO PARA PEGAR OS VALORES DE ALTURA E PESO PARA O CALCULO DO IMC.
+
   const calcularIMC = () => {
+    const classificacao = () => {
+      const imc = calcularIMC();
+
+      if (imc == null) {
+        return "";
+      }
+
+      if (imc < 18.5) {
+        return "Abaixo do peso";
+      }
+
+      if (imc < 25) {
+        return "Peso adequado";
+      }
+
+      if (imc < 30) {
+        return "Sobrepeso";
+      }
+
+      if (imc < 35) {
+        return "Obesidade grau I";
+      }
+
+      if (imc < 40) {
+        return "Obesidade grau II";
+      }
+
+      if (imc < 45) {
+        return "Obesidade grau III";
+      }
+    };
+
     const pesoNumero = parseFloat(peso.replace(",", "."));
     const alturaNumero = parseFloat(altura.replace(",", ".")) / 100;
-
     if (!pesoNumero || !alturaNumero) {
       return null;
     }
@@ -124,6 +157,20 @@ export default function Detalhes_do_paciente() {
           <Text style={styles.imcTitulo}>IMC</Text>
 
           <Text style={styles.imcValor}>{calcularIMC()?.toFixed(2)}</Text>
+
+          <Text style={styles.imcClassificacao}>
+            {calcularIMC()! < 18.5
+              ? "Abaixo do peso"
+              : calcularIMC()! < 25
+                ? "Peso adequado"
+                : calcularIMC()! < 30
+                  ? "Sobrepeso"
+                  : calcularIMC()! < 35
+                    ? "Obesidade grau I"
+                    : calcularIMC()! < 40
+                      ? "Obesidade grau II"
+                      : "Obesidade grau III"}
+          </Text>
         </View>
       )}
 
@@ -217,6 +264,11 @@ const styles = StyleSheet.create({
   imcValor: {
     fontSize: 28,
     fontWeight: "bold",
+    marginTop: 5,
+  },
+
+  imcClassificacao: {
+    fontSize: 16,
     marginTop: 5,
   },
 });
